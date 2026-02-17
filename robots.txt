@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eseom.github.io/spec-cat-landing/sitemap.xml

@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development</title>
+    <meta
+      name="description"
+      content="Spec Cat is an open-source local development workbench for spec-driven development, built around GitHub Spec-Kit workflows: spec -> plan -> tasks -> implement -> review."
+    />
+    <meta
+      name="keywords"
+      content="spec cat, spec-kit, speckit, spec-driven development, github spec-kit, spec plan tasks workflow, ai coding workbench, worktree isolation, nuxt vue typescript"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:title" content="Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development" />
+    <meta
+      property="og:description"
+      content="A local workbench that unifies spec writing, Git graph inspection, AI coding, worktree isolation, and workflow automation."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://eseom.github.io/spec-cat-landing/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development" />
+    <meta
+      name="twitter:description"
+      content="Built around GitHub Spec-Kit conventions with specs/ as source of truth, reviewable AI workflows, and safer implementation flow."
+    />
+    <link rel="canonical" href="https://eseom.github.io/spec-cat-landing/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Spec Cat",
+        "codeRepository": "https://github.com/spec-cat/spec-cat",
+        "url": "https://eseom.github.io/spec-cat-landing/",
+        "description": "An open-source local development workbench for spec-driven development and GitHub Spec-Kit workflows."
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #06080b;
+        --bg-soft: #0e141b;
+        --panel: #0c1218;
+        --panel-strong: #121b24;
+        --text: #d6deea;
+        --muted: #9ea8b7;
+        --line: #1f2b37;
+        --accent: #2dd4bf;
+        --accent-ink: #04110f;
+        --shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+        --radius: 2px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background:
+          radial-gradient(circle at 85% -10%, rgba(45, 212, 191, 0.15) 0, rgba(6, 8, 11, 0) 35%),
+          radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.12) 0, rgba(6, 8, 11, 0) 30%),
+          linear-gradient(180deg, #080b10 0%, #06080b 100%);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 36px 36px;
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1100px, 92vw);
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(10px);
+        background: rgba(8, 11, 16, 0.72);
+        border-bottom: 1px solid rgba(31, 43, 55, 0.85);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 72px;
+      }
+
+      .logo {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .logo::before {
+        content: "$ ";
+        color: #38bdf8;
+      }
+
+      .logo span {
+        color: var(--accent);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: var(--radius);
+        border: 1px solid transparent;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .button.primary {
+        background: var(--accent);
+        color: var(--accent-ink);
+        box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.18), 0 10px 20px rgba(45, 212, 191, 0.14);
+      }
+
+      .button.secondary {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(12, 18, 24, 0.85);
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        border-color: #3a4a5d;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 2.5rem;
+        align-items: center;
+        padding: 5.2rem 0 4rem;
+      }
+
+      .hero h1 {
+        font-family: "Space Grotesk", sans-serif;
+        margin: 0 0 1rem;
+        font-size: clamp(2rem, 5.3vw, 4.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      .hero h1 strong {
+        color: var(--accent);
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 56ch;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        margin-top: 1.75rem;
+      }
+
+      .hero-card {
+        background: linear-gradient(180deg, rgba(18, 27, 36, 0.8) 0%, rgba(12, 18, 24, 0.86) 100%);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: 0 0 0 1px rgba(31, 43, 55, 0.35), 0 12px 24px rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.8), rgba(45, 212, 191, 0.8));
+      }
+
+      .terminal {
+        background: #04070b;
+        color: #cbd5e1;
+        border: 1px solid #1e2935;
+        border-radius: var(--radius);
+        padding: 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      }
+
+      .terminal .ok {
+        color: #34d399;
+      }
+
+      .terminal .cmd {
+        color: #38bdf8;
+      }
+
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.9rem;
+      }
+
+      .badge {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(14, 20, 27, 0.9);
+        padding: 0.45rem 0.7rem;
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      section {
+        padding: 1.2rem 0 4rem;
+      }
+
+      h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        margin: 0 0 0.75rem;
+      }
+
+      h2::before {
+        content: "> ";
+        color: #38bdf8;
+      }
+
+      .section-lead {
+        margin: 0 0 1.6rem;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .feature {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(12, 18, 24, 0.9);
+        padding: 1.1rem;
+        position: relative;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .feature h3 {
+        margin: 0 0 0.4rem;
+        font-size: 1.05rem;
+      }
+
+      .feature p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .seo-copy {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(12, 18, 24, 0.9);
+        padding: 1.2rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .seo-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .step {
+        background: linear-gradient(165deg, rgba(17, 24, 32, 0.94) 0%, rgba(12, 18, 24, 0.94) 100%);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 1.1rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .step .num {
+        display: inline-grid;
+        place-items: center;
+        width: 1.9rem;
+        height: 1.9rem;
+        font-weight: 700;
+        border-radius: var(--radius);
+        color: #06110f;
+        background: var(--accent);
+        margin-bottom: 0.7rem;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .final {
+        margin: 1rem 0 3.5rem;
+        border: 1px solid var(--line);
+        background: linear-gradient(130deg, #101a24 0%, #0d1823 45%, #0f2330 100%);
+        color: var(--text);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: 0 0 0 1px rgba(31, 43, 55, 0.35), 0 14px 28px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .final::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.8), rgba(45, 212, 191, 0.8));
+      }
+
+      .final h2 {
+        margin-bottom: 0.65rem;
+      }
+
+      .final p {
+        color: #b6c2d1;
+        margin: 0;
+      }
+
+      .final .cta {
+        margin-top: 1.2rem;
+      }
+
+      .final .button.secondary {
+        background: rgba(8, 12, 18, 0.72);
+        color: var(--text);
+        border-color: #314255;
+      }
+
+      footer {
+        padding: 0.8rem 0 2.2rem;
+        color: #7f8da0;
+        font-size: 0.9rem;
+      }
+
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 700ms ease, transform 700ms ease;
+      }
+
+      [data-reveal].show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 4rem;
+        }
+
+        .grid,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .nav {
+          height: 66px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <a class="logo" href="#top">spec-<span>cat</span></a>
+        <a class="button secondary" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">GitHub Repo</a>
+      </div>
+    </header>
+
+    <main id="top" class="container">
+      <section class="hero">
+        <div data-reveal>
+          <h1>Turn ideas into <strong>actionable specs</strong></h1>
+          <p>
+            Spec Cat is an open-source tool that structures product requirements quickly and turns them into
+            implementation-ready specs. It is built to improve document quality and reduce communication overhead.
+          </p>
+          <div class="cta">
+            <a class="button primary" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">Get Started</a>
+            <a class="button secondary" href="#features">Explore Features</a>
+          </div>
+        </div>
+
+        <aside class="hero-card" data-reveal>
+          <div class="terminal">
+	    <div><span class="cmd">$</span> npx spec-cat &lt;project dir&gt;</div>
+          </div>
+          <div class="badges" aria-label="Strength tags">
+            <span class="badge">Open Source</span>
+            <span class="badge">Fast Onboarding</span>
+            <span class="badge">Standardized Specs</span>
+            <span class="badge">Team Productivity</span>
+          </div>
+        </aside>
+      </section>
+
+      <section id="features">
+        <h2 data-reveal>Why Spec Cat?</h2>
+        <p class="section-lead" data-reveal>
+          Spend less time writing specs and more time producing verifiable outcomes.
+        </p>
+        <div class="grid">
+          <article class="feature" data-reveal>
+            <h3>Structured Outputs</h3>
+            <p>Turn scattered ideas into consistent formats that make reviews and collaboration easier.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Faster Execution</h3>
+            <p>Clarify the path from spec to implementation so your team can move faster with less ambiguity.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Open-Source Foundation</h3>
+            <p>Customize and extend freely, so adoption is easy across different team environments.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="speckit-seo">
+        <h2 data-reveal>Spec-Kit Workflow, Unified in Spec Cat</h2>
+        <div class="seo-copy" data-reveal>
+          <p>
+            Spec Cat is a local development workbench for spec-driven teams. It follows GitHub Spec-Kit conventions and
+            operationalizes the workflow: spec -> plan -> tasks -> implement -> review. In one interface, teams can write
+            and edit specs, inspect Git graphs and diffs, run AI-assisted implementation with provider abstraction, and
+            keep changes isolated through worktree-based preview/finalize flows. Built with Nuxt 3, Vue 3, TypeScript,
+            and SQLite-backed spec search, Spec Cat helps teams move faster without losing structure or reviewability.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-reveal>Get Started in 3 Steps</h2>
+        <div class="steps">
+          <article class="step" data-reveal>
+            <span class="num">1</span>
+            <p>Clone the repository and set up your local environment.</p>
+          </article>
+          <article class="step" data-reveal>
+            <span class="num">2</span>
+            <p>Input your idea or requirements to generate a draft spec.</p>
+          </article>
+          <article class="step" data-reveal>
+            <span class="num">3</span>
+            <p>Review with your team and move directly into implementation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="final" data-reveal>
+        <h2>Shorten your documentation loop with Spec Cat</h2>
+        <p>
+          Explore the project on GitHub and plug it into your team's workflow today.
+        </p>
+        <div class="cta">
+          <a class="button primary" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">View on GitHub</a>
+          <a class="button secondary" href="https://github.com/spec-cat/spec-cat/issues" target="_blank" rel="noreferrer">Join Issues & Feedback</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container">
+      <div>© <span id="year"></span> Spec Cat Landing. Built for GitHub Pages.</div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
+    </script>
+  </body>
+</html>

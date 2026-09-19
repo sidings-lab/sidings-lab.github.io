@@ -3,38 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development</title>
+    <title>Sidings | Git-Native Workbench for Autonomous Coding Agents</title>
     <meta
       name="description"
-      content="Spec Cat is an open-source local development workbench for spec-driven development, built around GitHub Spec-Kit workflows: spec -> plan -> tasks -> implement -> review."
+      content="Sidings gives Claude Code, OpenAI Codex, and Antigravity their own Git worktrees and persistent tmux sessions in one local web dashboard. Run agents in parallel without polluting your main working tree."
     />
     <meta
       name="keywords"
-      content="spec cat, spec-kit, speckit, spec-driven development, github spec-kit, spec plan tasks workflow, ai coding workbench, worktree isolation, nuxt vue typescript"
+      content="sidings, coding agents, git worktree, tmux, claude code, openai codex, antigravity, ai coding workbench, multi-agent, local web terminal"
     />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta property="og:title" content="Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development" />
+    <meta property="og:title" content="Sidings | Git-Native Workbench for Autonomous Coding Agents" />
     <meta
       property="og:description"
-      content="A local workbench that unifies spec writing, Git graph inspection, AI coding, worktree isolation, and workflow automation."
+      content="The Git-native workbench for autonomous coding agents. Isolated Git worktrees, persistent tmux sessions, and in-context review."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://spec-cat.github.io/" />
+    <meta property="og:url" content="https://sidings.github.io/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Spec Cat | Spec-Kit Workflow Workbench for Spec-Driven Development" />
+    <meta name="twitter:title" content="Sidings | Git-Native Workbench for Autonomous Coding Agents" />
     <meta
       name="twitter:description"
-      content="Built around GitHub Spec-Kit conventions with specs/ as source of truth, reviewable AI workflows, and safer implementation flow."
+      content="Run Claude Code, OpenAI Codex, and Antigravity in parallel with isolated Git worktrees and persistent tmux sessions."
     />
-    <link rel="canonical" href="https://spec-cat.github.io/" />
+    <link rel="canonical" href="https://sidings.github.io/" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareSourceCode",
-        "name": "Spec Cat",
-        "codeRepository": "https://github.com/spec-cat/spec-cat",
-        "url": "https://spec-cat.github.io/",
-        "description": "An open-source local development workbench for spec-driven development and GitHub Spec-Kit workflows."
+        "name": "Sidings",
+        "codeRepository": "https://github.com/sidings-lab/sidings",
+        "url": "https://sidings.github.io/",
+        "description": "The Git-native workbench for autonomous coding agents."
       }
     </script>
     <style>
@@ -119,6 +119,12 @@
         color: var(--retro-green);
       }
 
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
       /* Buttons */
       .btn {
         display: inline-flex;
@@ -165,9 +171,9 @@
 
       .hero h1 {
         margin: 0 0 0.75rem;
-        font-size: clamp(1.5rem, 4vw, 2.4rem);
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
         font-weight: 700;
-        line-height: 1.2;
+        line-height: 1.25;
         letter-spacing: -0.01em;
         color: var(--retro-text);
       }
@@ -230,6 +236,12 @@
         color: var(--retro-cyan);
       }
 
+      .terminal-comment {
+        color: var(--retro-subtle);
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+      }
+
       .badges {
         display: flex;
         flex-wrap: wrap;
@@ -248,7 +260,7 @@
 
       /* Sections */
       section {
-        padding: 1rem 0 3rem;
+        padding: 1.5rem 0 2.5rem;
       }
 
       h2 {
@@ -265,6 +277,7 @@
       .section-lead {
         margin: 0 0 1.25rem;
         color: var(--retro-muted);
+        max-width: 65ch;
       }
 
       /* Feature grid */
@@ -276,13 +289,17 @@
         border: 1px solid var(--retro-border);
       }
 
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .feature {
         background: var(--retro-dark);
-        padding: 1rem;
+        padding: 1.25rem 1rem;
       }
 
       .feature h3 {
-        margin: 0 0 0.35rem;
+        margin: 0 0 0.4rem;
         font-size: 0.875rem;
         font-weight: 700;
         color: var(--retro-cyan);
@@ -291,8 +308,61 @@
       .feature p {
         margin: 0;
         color: var(--retro-muted);
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         line-height: 1.6;
+      }
+
+      /* Metaphor banner */
+      .metaphor-banner {
+        border: 1px solid var(--retro-border);
+        background: var(--retro-dark);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border-left: 3px solid var(--retro-cyan);
+      }
+
+      .metaphor-banner p {
+        margin: 0;
+        color: var(--retro-text);
+        line-height: 1.7;
+      }
+
+      /* Comparison Table */
+      .table-container {
+        overflow-x: auto;
+        border: 1px solid var(--retro-border);
+        background: var(--retro-dark);
+        margin: 1.25rem 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+      }
+
+      th, td {
+        padding: 0.65rem 0.9rem;
+        border-bottom: 1px solid var(--retro-border);
+      }
+
+      th {
+        background: var(--retro-panel);
+        color: var(--retro-text);
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.highlight {
+        color: var(--retro-cyan);
+        font-weight: 700;
       }
 
       /* Steps */
@@ -306,7 +376,7 @@
 
       .step {
         background: var(--retro-dark);
-        padding: 1rem;
+        padding: 1.25rem 1rem;
       }
 
       .step .num {
@@ -322,7 +392,7 @@
       }
 
       .step h3 {
-        margin: 0 0 0.25rem;
+        margin: 0 0 0.35rem;
         font-size: 0.875rem;
         font-weight: 700;
         color: var(--retro-text);
@@ -331,29 +401,26 @@
       .step p {
         margin: 0;
         color: var(--retro-muted);
-        font-size: 0.875rem;
+        font-size: 0.85rem;
       }
 
-      /* SEO copy */
-      .seo-copy {
+      .step code {
+        display: block;
+        margin-top: 0.5rem;
+        padding: 0.3rem 0.5rem;
+        background: var(--retro-panel);
         border: 1px solid var(--retro-border);
-        background: var(--retro-dark);
-        padding: 1rem;
-      }
-
-      .seo-copy p {
-        margin: 0;
-        color: var(--retro-muted);
-        line-height: 1.75;
-        font-size: 0.875rem;
+        color: var(--retro-cyan);
+        font-size: 0.8rem;
+        word-break: break-all;
       }
 
       /* Final CTA */
       .final {
-        margin: 1rem 0 3rem;
+        margin: 1.5rem 0 3rem;
         border: 1px solid var(--retro-border);
         background: var(--retro-dark);
-        padding: 1.5rem;
+        padding: 1.75rem;
         position: relative;
       }
 
@@ -378,12 +445,12 @@
       }
 
       .final .cta {
-        margin-top: 1rem;
+        margin-top: 1.25rem;
       }
 
       /* Footer */
       footer {
-        padding: 0.75rem 0 2rem;
+        padding: 1rem 0 2.5rem;
         color: var(--retro-subtle);
         font-size: 0.75rem;
         border-top: 1px solid var(--retro-border);
@@ -405,12 +472,17 @@
       @media (max-width: 768px) {
         .hero {
           grid-template-columns: 1fr;
-          padding-top: 3rem;
+          padding-top: 2.5rem;
         }
 
         .grid,
+        .grid-4,
         .steps {
           grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+          display: none;
         }
       }
     </style>
@@ -419,23 +491,30 @@
     <header>
       <div class="container nav">
         <a class="logo" href="#top">
-          <span class="prompt">$</span> SPECCAT
+          <span class="prompt">$</span> SIDINGS
         </a>
-        <a class="btn" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">GitHub Repo</a>
+        <div class="nav-links">
+          <a class="btn" href="#metaphor">Metaphor</a>
+          <a class="btn" href="#features">Features</a>
+          <a class="btn" href="#comparison">Why Sidings</a>
+          <a class="btn" href="#quickstart">Quickstart</a>
+        </div>
+        <a class="btn btn-primary" href="https://github.com/sidings-lab/sidings" target="_blank" rel="noreferrer">GitHub Repo</a>
       </div>
     </header>
 
     <main id="top" class="container">
+      <!-- Hero -->
       <section class="hero">
         <div data-reveal>
-          <h1>Turn ideas into <strong>actionable specs</strong></h1>
+          <h1>The Git-native workbench for <strong>autonomous coding agents</strong></h1>
           <p>
-            Spec Cat is an open-source tool that structures product requirements quickly and turns them into
-            implementation-ready specs. It is built to improve document quality and reduce communication overhead.
+            Sidings gives Claude Code, OpenAI Codex, and Antigravity their own Git worktrees and persistent tmux sessions,
+            then brings them together in one local web dashboard. Run agents in parallel without polluting your main working tree.
           </p>
           <div class="cta">
-            <a class="btn btn-primary" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">Get Started</a>
-            <a class="btn" href="#features">Explore Features</a>
+            <a class="btn btn-primary" href="https://github.com/sidings-lab/sidings" target="_blank" rel="noreferrer">Get Started on GitHub</a>
+            <a class="btn" href="#quickstart">30s Quickstart</a>
           </div>
         </div>
 
@@ -447,83 +526,179 @@
             <span>terminal</span>
           </div>
           <div class="terminal">
-            <div><span class="prompt">$</span> <span class="cmd">npx spec-cat &lt;project dir&gt;</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">npx @sidings-lab/sidings@latest</span></div>
+            <div class="terminal-comment"># Launches control room on http://127.0.0.1:3000</div>
           </div>
-          <div class="badges" aria-label="Strength tags">
+          <div class="badges" aria-label="Feature badges">
+            <span class="badge">Git Worktrees</span>
+            <span class="badge">Persistent tmux</span>
+            <span class="badge">Bracketed Paste</span>
+            <span class="badge">Turn Detection</span>
             <span class="badge">Open Source</span>
-            <span class="badge">Fast Onboarding</span>
-            <span class="badge">Standardized Specs</span>
-            <span class="badge">Team Productivity</span>
           </div>
         </aside>
       </section>
 
+      <!-- The Siding Metaphor -->
+      <section id="metaphor">
+        <h2 data-reveal><span class="prompt">&gt;</span> The Siding Metaphor</h2>
+        <div class="metaphor-banner" data-reveal>
+          <p>
+            In railway systems, a <strong>siding (측선/대피선)</strong> is a track branching off the main line where trains can
+            stop, work, or be maintained without blocking ongoing traffic. tmux provides the switching and signals underneath,
+            while Sidings gives you the master control room.
+          </p>
+        </div>
+        <div class="grid grid-4">
+          <article class="feature" data-reveal>
+            <h3>Main Line (본선)</h3>
+            <p>Your main git branch stays clean and deployable. No collision, branch pollution, or uncommitted agent debris.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Sidings (측선)</h3>
+            <p>Each agent conversation runs in an isolated Git worktree and managed branch with dedicated file isolation.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Trains (열차)</h3>
+            <p>Claude Code, OpenAI Codex, and Antigravity (AGY) run concurrently as autonomous, independent engines.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Control Room (사령실)</h3>
+            <p>A local web dashboard that shows turn statuses, commit history, and unified diffs in one live view.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Key Features -->
       <section id="features">
-        <h2 data-reveal><span class="prompt">&gt;</span> Why Spec Cat?</h2>
+        <h2 data-reveal><span class="prompt">&gt;</span> Key Capabilities</h2>
         <p class="section-lead" data-reveal>
-          Spend less time writing specs and more time producing verifiable outcomes.
+          Solve the recurring headaches of coordinating concurrent CLI agents in raw terminal sessions.
         </p>
         <div class="grid">
           <article class="feature" data-reveal>
-            <h3>Structured Outputs</h3>
-            <p>Turn scattered ideas into consistent formats that make reviews and collaboration easier.</p>
+            <h3>Managed Worktree Isolation</h3>
+            <p>Automatic branch creation, directory isolation, preview checkout, squash, and cleanup directly from the dashboard.</p>
           </article>
           <article class="feature" data-reveal>
-            <h3>Faster Execution</h3>
-            <p>Clarify the path from spec to implementation so your team can move faster with less ambiguity.</p>
+            <h3>Bracketed Paste Safety</h3>
+            <p>Large prompts and diffs stream via tmux paste buffers with settle delays, preventing buffer stalls and lost input frames.</p>
           </article>
           <article class="feature" data-reveal>
-            <h3>Open-Source Foundation</h3>
-            <p>Customize and extend freely, so adoption is easy across different team environments.</p>
+            <h3>Turn & Attention Detection</h3>
+            <p>Distinguishes active, idle, and input-waiting states via provider hooks, screen inspection, and quiet windows.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Persistent tmux Sessions</h3>
+            <p>Processes survive browser reloads or server restarts. Resume sessions seamlessly without interrupting agent execution.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>In-Context Git & Diff Review</h3>
+            <p>Inspect commit graphs, branch status, and file diffs side-by-side with live agent terminal output.</p>
+          </article>
+          <article class="feature" data-reveal>
+            <h3>Spec-Driven Automation</h3>
+            <p>Integrates GitHub Spec-Kit conventions (spec -> plan -> tasks -> implement) and headless batch workflows.</p>
           </article>
         </div>
       </section>
 
-      <section id="speckit-seo">
-        <h2 data-reveal><span class="prompt">&gt;</span> Spec-Kit Workflow, Unified in Spec Cat</h2>
-        <div class="seo-copy" data-reveal>
-          <p>
-            Spec Cat is a local development workbench for spec-driven teams. It follows GitHub Spec-Kit conventions and
-            operationalizes the workflow: spec -> plan -> tasks -> implement -> review. In one interface, teams can write
-            and edit specs, inspect Git graphs and diffs, run AI-assisted implementation with provider abstraction, and
-            keep changes isolated through worktree-based preview/finalize flows. Built with Nuxt 3, Vue 3, TypeScript,
-            and SQLite-backed spec search, Spec Cat helps teams move faster without losing structure or reviewability.
-          </p>
+      <!-- Comparison -->
+      <section id="comparison">
+        <h2 data-reveal><span class="prompt">&gt;</span> Why Sidings?</h2>
+        <p class="section-lead" data-reveal>
+          How Sidings compares with raw tmux, desktop IDEs, and terminal multiplexer tools.
+        </p>
+        <div class="table-container" data-reveal>
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Raw tmux</th>
+                <th>Cursor / IDE</th>
+                <th>Herdr (TUI)</th>
+                <th>Sidings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Git worktree isolation</td>
+                <td>Manual</td>
+                <td>No</td>
+                <td>No</td>
+                <td class="highlight">Managed per conversation</td>
+              </tr>
+              <tr>
+                <td>Large-prompt paste safety</td>
+                <td>Fragile input queue</td>
+                <td>N/A</td>
+                <td>CLI buffer</td>
+                <td class="highlight">Bracketed paste + settle delay</td>
+              </tr>
+              <tr>
+                <td>Turn / blocked detection</td>
+                <td>Blind</td>
+                <td>Internal</td>
+                <td>Screen manifest</td>
+                <td class="highlight">Screen text + quiet window</td>
+              </tr>
+              <tr>
+                <td>Interface</td>
+                <td>Terminal</td>
+                <td>Desktop GUI</td>
+                <td>TUI</td>
+                <td class="highlight">Local web dashboard</td>
+              </tr>
+              <tr>
+                <td>Multi-agent workflow</td>
+                <td>Hand-written scripts</td>
+                <td>Single focus</td>
+                <td>Terminal panes</td>
+                <td class="highlight">Spec-driven batches</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section>
-        <h2 data-reveal><span class="prompt">&gt;</span> Get Started in 3 Steps</h2>
+      <!-- Quickstart -->
+      <section id="quickstart">
+        <h2 data-reveal><span class="prompt">&gt;</span> Quickstart in 3 Steps</h2>
         <div class="steps">
           <article class="step" data-reveal>
             <span class="num">1</span>
-            <p>Clone the repository and set up your local environment.</p>
+            <h3>Prerequisites</h3>
+            <p>Ensure Node.js 20+, Git, tmux, and at least one CLI (Claude Code, Codex, or AGY) are installed.</p>
           </article>
           <article class="step" data-reveal>
             <span class="num">2</span>
-            <p>Input your idea or requirements to generate a draft spec.</p>
+            <h3>Run Sidings</h3>
+            <p>Launch the dashboard with zero installation overhead:</p>
+            <code>npx @sidings-lab/sidings@latest</code>
           </article>
           <article class="step" data-reveal>
             <span class="num">3</span>
-            <p>Review with your team and move directly into implementation.</p>
+            <h3>Orchestrate</h3>
+            <p>Select your provider, open parallel worktrees, and review changes safely in context.</p>
           </article>
         </div>
       </section>
 
+      <!-- Final CTA -->
       <section class="final" data-reveal>
-        <h2><span class="prompt">&gt;</span> Shorten your documentation loop</h2>
+        <h2><span class="prompt">&gt;</span> Run coding agents without the traffic jam</h2>
         <p>
-          Explore the project on GitHub and plug it into your team's workflow today.
+          Sidings is local-first, single-user, and binds to 127.0.0.1 by default. Check out the open-source repository today.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="https://github.com/spec-cat/spec-cat" target="_blank" rel="noreferrer">View on GitHub</a>
-          <a class="btn" href="https://github.com/spec-cat/spec-cat/issues" target="_blank" rel="noreferrer">Join Issues & Feedback</a>
+          <a class="btn btn-primary" href="https://github.com/sidings-lab/sidings" target="_blank" rel="noreferrer">View on GitHub</a>
+          <a class="btn" href="https://github.com/sidings-lab/sidings/issues" target="_blank" rel="noreferrer">GitHub Issues & Feedback</a>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="container">&copy; <span id="year"></span> Spec Cat. Built for GitHub Pages.</div>
+      <div class="container">&copy; <span id="year"></span> Sidings. Open source under the MIT License. Built for GitHub Pages.</div>
     </footer>
 
     <script>
@@ -538,7 +713,7 @@
             }
           });
         },
-        { threshold: 0.2 }
+        { threshold: 0.15 }
       );
 
       document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
